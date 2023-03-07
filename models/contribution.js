@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const contributionSchema = new mongoose.Schema({
   mvp: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'MVP',
+    ref: "MVP",
   },
   field: String,
   topic: String,
-  date: Number,
+  date: String,
   image: String,
-  description: String
-})
+  description: String,
+});
 
-const Contribution = mongoose.model('Contribution', contributionSchema)
-module.exports = Contribution
+const Contribution = mongoose.model("Contribution", contributionSchema);
+module.exports = Contribution;

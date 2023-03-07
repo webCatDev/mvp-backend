@@ -1,14 +1,17 @@
-const express = require('express')
-const contributionsController = require('../controllers/contributionsController.js')
-const router = express.Router()
+const express = require("express");
+const verifyToken = require("../auth/verifyToken.js");
+const contributionsController = require("../controllers/contributionsController.js");
+const router = express.Router();
 
-router.route('/')
+router
+  .route("/")
   .get(contributionsController.getAllContributions)
-  .post(contributionsController.addContribution)
+  .post(verifyToken, contributionsController.addContribution);
 
-router.route('/:id')
+router
+  .route("/:id")
   .get(contributionsController.getContribution)
-  .patch(contributionsController.updateContribution)
-  .delete(contributionsController.deleteContribution)
+  .patch(verifyToken, contributionsController.updateContribution)
+  .delete(verifyToken, contributionsController.deleteContribution);
 
-module.exports = router
+module.exports = router;

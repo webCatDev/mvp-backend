@@ -1,17 +1,19 @@
-const express = require('express')
-const mvpsController = require('../controllers/mvpsController.js')
-const router = express.Router()
+const express = require("express");
+const verifyToken = require("../auth/verifyToken.js");
+const mvpsController = require("../controllers/mvpsController.js");
+const router = express.Router();
 
-router.route('/')
+router
+  .route("/")
   .get(mvpsController.getAllMVPs)
-  .post(mvpsController.addMVP)
+  .post(verifyToken, mvpsController.addMVP);
 
-router.route('/featured').get(mvpsController.getFeaturedMVPs)
+router.route("/featured").get(mvpsController.getFeaturedMVPs);
 
-router.route('/:id')
+router
+  .route("/:id")
   .get(mvpsController.getMVP)
-  .patch(mvpsController.updateMVP)
-  .delete(mvpsController.deleteMVP)
+  .patch(verifyToken, mvpsController.updateMVP)
+  .delete(verifyToken, mvpsController.deleteMVP);
 
-
-module.exports = router
+module.exports = router;

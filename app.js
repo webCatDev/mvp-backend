@@ -26,4 +26,11 @@ app.use("/fields", fieldsRouter);
 app.use("/mvps", mvpRouter);
 app.use("/contributions", contributionsRouter);
 
+// Global error handler
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || 'An error occurred';
+  res.status(status).json({ error: message });
+});
+
 module.exports = app;

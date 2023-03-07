@@ -1,37 +1,53 @@
+const { StatusCodes } = require("http-status-codes");
 const Field = require("../models/field.js");
+const catchAsync = require("../utilities/catchAsync.js");
+const createError = require("../utilities/createError.js");
+const QueryBuilder = require("../utilities/QueryBuilder.js");
 
-exports.getAllFields = async (req, res) => {
-  const fields = await Field.find();
-  res.json(fields);
-};
+exports.getAllFields = catchAsync(async (req, res) => {
+   const queryBuilder = new QueryBuilder(Field);
+   queryBuilder
+     .search(req.query)
+     .filter(req.query)
+     .sort(req.query.sort)
+     .paginate(req.query);
 
-exports.getField = async (req, res) => {
+   const fields = await queryBuilder.execute()
+
+  res.status(StatusCodes.OK).json(fields);
+});
+
+exports.getField = catchAsync(async (req, res, next) => {
   const field = await Field.findById(req.params.id);
-  res.json(field);
-};
+  if(!field) return next(createError(StatusCodes.NOT_FOUND, 'Böyle bir alan yok'))
+  res.status(StatusCodes.OK).json(field);
+});
 
-exports.addField = async (req, res) => {
+exports.addField = catchAsync(async (req, res) => {
   const { name } = req.body;
 
   await Field.create({ name });
-  res.json({
+
+  res.status(StatusCodes.CREATED).json({
     status: "success",
     message: "Alan başarılı bir şekilde eklendi",
   });
-};
+});
 
-exports.updateField = async (req, res) => {
+exports.updateField = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   await Field.findByIdAndUpdate(id, { name }, { new: true });
-  res.json({
+  res.status(StatusCodes.OK).json({
     status: "success",
     message: "Alan başarılı bir şekilde güncellendi",
   });
-};
+});
 
-exports.deleteField = async (req, res) => {
+exports.deleteField = catchAsync(async (req, res) => {
   const { id } = req.params;
   await Field.findByIdAndDelete(id);
-  res.json({ status: "success", message: "Alan başarıyla silindi!" });
-};
+  res
+    .status(StatusCodes.OK)
+    .json({ status: "success", message: "Alan başarıyla silindi!" });
+});

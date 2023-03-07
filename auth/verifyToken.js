@@ -1,10 +1,12 @@
+const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
+const createError = require("../utilities/createError");
 
 function verifyToken(req, res, next) {
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return next(createError(StatusCodes.UNAUTHORIZED, "Lütfen giriş yapınız"));
   }
 
   try {
@@ -12,7 +14,7 @@ function verifyToken(req, res, next) {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(400).json({ message: "Invalid token" });
+    res.status(StatusCodes.FORBIDDEN).json({ message: "Invalid token" });
   }
 }
 

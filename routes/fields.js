@@ -1,15 +1,16 @@
 const express = require('express')
+const verifyToken = require('../auth/verifyToken.js')
 const fieldsController = require('../controllers/fieldsController.js')
 const router = express.Router()
 
 router.route('/')
   .get(fieldsController.getAllFields)
-  .post(fieldsController.addField)
+  .post(verifyToken,fieldsController.addField)
 
 router.route('/:id')
   .get(fieldsController.getField)
-  .patch(fieldsController.updateField)
-  .delete(fieldsController.deleteField)
+  .patch(verifyToken,fieldsController.updateField)
+  .delete(verifyToken,fieldsController.deleteField)
 
 
 module.exports = router
