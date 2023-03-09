@@ -1,3 +1,13 @@
+require('dotenv').config()
+const {PORT = 5000} = process.env
+
+const connectDatabase = require('./utilities/connectDatabase.js')
+
+connectDatabase()
+  .then(() => console.log("Database connection is successfull!"))
+  .catch(err => console.log(err));
+
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -33,4 +43,5 @@ app.use((err, req, res, next) => {
   res.status(status).json({ error: message });
 });
 
-module.exports = app;
+
+const server = app.listen(PORT, "0.0.0.0", () => console.log(`Listening on: http://localhost:${PORT}`))
