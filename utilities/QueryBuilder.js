@@ -71,8 +71,14 @@ class QueryBuilder {
     return this;
   }
 
-  async execute() {
-    const result = await this.model.find(this.query);
+  async execute(options) {
+    let  result
+    if(options?.populate) {
+      result = await this.model.find(this.query).populate(options.populate);
+    } else {
+      result = await this.model.find(this.query);
+
+    }
     const count = await this.model.countDocuments(this.query);
     const totalPages = Math.ceil(count / this.query.$limit);
     const currentPage = Math.ceil(this.query.$skip / this.query.$limit) + 1;

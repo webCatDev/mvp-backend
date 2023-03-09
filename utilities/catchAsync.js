@@ -1,5 +1,6 @@
 const catchAsync = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch((err) => {
+    console.log(err)
     // Check if the error is an instance of mongoose error and send appropriate response
     if (err instanceof Error.ValidationError) {
       return res.status(400).send({ error: err.message });

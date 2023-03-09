@@ -12,7 +12,7 @@ exports.getAllContributions = catchAsync(async (req, res) => {
     .sort(req.query.sort)
     .paginate(req.query);
 
-  const contributions = await queryBuilder.execute().populate({ path: "mvp" });
+  const contributions = await queryBuilder.execute({populate: { path: "mvp" }});
 
   res.status(StatusCodes.OK).json(contributions);
 });
